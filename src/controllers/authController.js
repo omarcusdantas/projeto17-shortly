@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
-import { foundUser, createUser, checkPassword, newSection } from "../repository/auth.repository.js";
+import { v4 as uuid } from "uuid";
+import { findUser, createUser, checkPassword, newSession } from "../repository/auth.repository.js";
 
-export async function sigup(req, res) {
+export async function signup(req, res) {
     const { name, email, password, confirmPassword } = req.body;
 
     try {
@@ -9,8 +10,8 @@ export async function sigup(req, res) {
             return res.status(422).send("Passwords don't match");
         }
 
-        const isEmailRegistered = await foundUser(email);
-        if (isEmailRegistered) {
+        const foundUser = await findUser(email);
+        if (foundUser) {
             return res.sendStatus(409);
         }
 
@@ -26,13 +27,13 @@ export async function signin(req, res) {
     const { email, password } = req.body;
 
     try {
-        const passwordMatch = await checkPassword(email, password);
-        if (!passwordMatch) {
+        const userValidated = await checkPassword(email, password);
+        if (!userValidated) {
             return res.sendStatus(401);
         }
 
         const token = uuid();
-        await newSection(email, token);
+        await newSession(userValidated.id, token);
         return res.status(200).send({ token });
     } catch (error) {
         return res.status(500).send(error.message);
