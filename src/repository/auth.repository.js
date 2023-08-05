@@ -3,17 +3,14 @@ import bcrypt from "bcrypt";
 
 export async function findUser(email) {
     const foundUser = await db.query(`SELECT * FROM users WHERE "email"=$1`, [email]);
-    if (foundUser.rowCount > 0) {
-        return foundUser.rows[0];
-    }
-    return false;
+    return foundUser.rows[0];
 }
 
 export async function createUser(name, email, password) {
     await db.query(`
         INSERT INTO users ("name", "email" ,"password") 
         VALUES ( $1, $2, $3 )
-        `, [name, email, password]);
+    `, [name, email, password]);
 }
 
 export async function checkPassword(email, password) {

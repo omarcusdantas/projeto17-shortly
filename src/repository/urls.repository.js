@@ -4,7 +4,7 @@ export async function addUrl(url, hash, userId) {
     await db.query(`
         INSERT INTO urls (userid, "shortUrl", url) 
         VALUES($1, $2, $3)
-        `, [userId, hash, url]);
+    `, [userId, hash, url]);
 }
 
 export async function getUrlByHash(hash) {

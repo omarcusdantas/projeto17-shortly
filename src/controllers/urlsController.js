@@ -65,7 +65,6 @@ export async function deleteUrl(req, res) {
         await deleteUrlById(id);
         return res.sendStatus(204);
     } catch (error) {
-        console.log(error.message);
-        return res.status(500).send('Internal server error');
+        return res.status(500).send(error.message);
     }
 }
