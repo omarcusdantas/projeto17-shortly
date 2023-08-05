@@ -10,7 +10,10 @@ export async function findUser(email) {
 }
 
 export async function createUser(name, email, password) {
-    await db.query(`INSERT INTO users ("name", "email" ,"password") VALUES ( $1, $2, $3 )`, [name, email, password]);
+    await db.query(`
+        INSERT INTO users ("name", "email" ,"password") 
+        VALUES ( $1, $2, $3 )
+        `, [name, email, password]);
 }
 
 export async function checkPassword(email, password) {
@@ -22,5 +25,8 @@ export async function checkPassword(email, password) {
 }
 
 export async function newSession(userId, token) {
-    await db.query(`INSERT INTO sessions ("userid","token") VALUES ($1,$2)`, [userId, token]);
+    await db.query(`
+        INSERT INTO sessions ("userid","token") 
+        VALUES ($1,$2)
+    `, [userId, token]);
 }
