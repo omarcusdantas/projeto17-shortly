@@ -16,3 +16,7 @@ export async function getUrlById(id) {
     const url = await db.query(`SELECT * FROM urls WHERE "id" = $1`, [id]);
     return url.rows[0];
 }
+
+export async function increaseVisitCount(hash) {
+    await db.query(`UPDATE urls SET "visitCount" = "visitCount" + 1 WHERE "shortUrl" = $1`, [hash]);
+}

@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { addUrl, getUrlByHash, getUrlById } from "../repository/urls.repository.js";
+import { addUrl, getUrlByHash, getUrlById, increaseVisitCount } from "../repository/urls.repository.js";
 
 export async function shortenUrl(req, res) {
     const { url } = req.body;
@@ -27,6 +27,22 @@ export async function getUrl(req, res) {
             shortUrl: url.shortUrl,
             url: url.url,
         });
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+}
+
+export async function accessUrl(req, res) {
+    const hash = req.params.shortUrl;
+    
+    try {
+        const url = await getUrlByHash(hash);
+        if (!url) {
+            return res.sendStatus(404);
+        }
+
+        await increaseVisitCount(hash);
+        return res.redirect(url.url);
     } catch (error) {
         return res.status(500).send(error.message);
     }
