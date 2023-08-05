@@ -20,3 +20,7 @@ export async function getUrlById(id) {
 export async function increaseVisitCount(hash) {
     await db.query(`UPDATE urls SET "visitCount" = "visitCount" + 1 WHERE "shortUrl" = $1`, [hash]);
 }
+
+export async function deleteUrlById(id) {
+    await db.query(`DELETE FROM urls WHERE id = $1`, [id]);
+}

@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { addUrl, getUrlByHash, getUrlById, increaseVisitCount } from "../repository/urls.repository.js";
+import { addUrl, getUrlByHash, getUrlById, increaseVisitCount, deleteUrlById } from "../repository/urls.repository.js";
 
 export async function shortenUrl(req, res) {
     const { url } = req.body;
@@ -45,5 +45,27 @@ export async function accessUrl(req, res) {
         return res.redirect(url.url);
     } catch (error) {
         return res.status(500).send(error.message);
+    }
+}
+
+export async function deleteUrl(req, res) {
+    const { id } = req.params;
+    const userId = res.locals.userId;
+
+    try {
+        const url = await getUrlById(id);
+        if (!url) {
+            return res.sendStatus(404);
+        }
+
+        if (userId !== url.userid) {
+            return res.sendStatus(401);
+        }
+
+        await deleteUrlById(id);
+        return res.sendStatus(204);
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).send('Internal server error');
     }
 }
