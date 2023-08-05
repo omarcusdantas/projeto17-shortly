@@ -11,3 +11,8 @@ export async function getUrlByHash(hash) {
     const url = await db.query(`SELECT * FROM urls WHERE "shortUrl" = $1`, [hash]);
     return url.rows[0];
 }
+
+export async function getUrlById(id) {
+    const url = await db.query(`SELECT * FROM urls WHERE "id" = $1`, [id]);
+    return url.rows[0];
+}
