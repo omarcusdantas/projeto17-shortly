@@ -15,6 +15,10 @@ export async function createUser(name, email, password) {
 
 export async function checkPassword(email, password) {
     const foundUser = await findUser(email);
+    if (!foundUser) {
+        return false;
+    }
+
     if (bcrypt.compareSync(password, foundUser.password)) {
         return foundUser;
     }
